@@ -1,0 +1,80 @@
+.panel
+  .panel-body
+    h3 {{title}}
+    .row
+      .col-xs-3
+        form(role='form', novalidate, name='tForm')
+          .form-group
+            label.control-label Name:
+            input.form-control#name(ng-model='task.name', type='text', name='name', required, ng-minlength='3')
+          .form-group
+            label.control-label Due:
+            input.form-control#due(ng-model='task.due', type='date', name='due', required)
+          .form-group
+            label.control-label Priority
+            select.form-control#priority(ng-model='task.priorityId', name='priorityId', ng-options='p._id as p.name for p in priorities | orderBy:\'name\'', required)
+              option(value='') Select Priority
+          button.btn.btn-danger(type='submit', ng-show='tForm.$valid', ng-click='createTask()') Add
+      .col-xs-9
+    .row
+      .spacer
+    .row#task-display(ng-show='tasks')
+      .col-xs-12
+        .row
+          .col-xs-3
+            h5 Sort By Due
+            .radio
+              label
+                input(name='sort', type='radio', ng-model='sort', value='due')
+                span Ascending
+            .radio
+              label
+                input(name='sort', type='radio', ng-model='sort', value='-due')
+                span Descending
+          .col-xs-3
+            h5 Sort By Name
+            .radio
+              label
+                input(name='sort', type='radio', ng-model='sort', value='name')
+                span Ascending
+            .radio
+              label
+                input(name='sort', type='radio', ng-model='sort', value='-name')
+                span Descending
+          .col-xs-3
+            h5 Sort By Priority
+            .radio
+              label
+                input(name='sort', type='radio', ng-model='sort', value='priority.name')
+                span Ascending
+            .radio
+              label
+                input(name='sort', type='radio', ng-model='sort', value='-priority.name')
+                span Descending
+          .col-xs-3
+            h5 Sort By Complete
+            .radio
+              label
+                input(name='sort', type='radio', ng-model='sort', value='isComplete')
+                span Ascending
+            .radio
+              label
+                input(name='sort', type='radio', ng-model='sort', value='-isComplete')
+                span Descending
+        .row
+          .col-xs-12
+            table.table.table-hover
+              thead
+                tr
+                  th Name
+                  th Due
+                  th Priority
+                  th Complete
+              tbody
+                tr(ng-repeat='t in tasks | orderBy:sort', ng-style='{"background-color":t.priority.color};')
+                  td {{t.name}}
+                  td {{t.due | date:'mediumDate'}}
+                  td {{t.priority.name}}
+                  td
+                    input(type='checkbox', name='completed', ng-model='t.isComplete', ng-checked='t.isComplete' ng-click='toggleComplete(t._id)')
+
